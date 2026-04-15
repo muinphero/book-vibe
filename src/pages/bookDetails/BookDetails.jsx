@@ -1,6 +1,7 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useLoaderData, useParams } from "react-router";
 import { BookContext } from "../../context/BookProvider";
+import { toast } from "react-toastify";
 
 const BookDetails = () => {
   const { bookId: bookParamsId } = useParams();
@@ -28,10 +29,8 @@ const BookDetails = () => {
     yearOfPublishing,
   } = expectedBook;
 
-  const bookContext = useContext(BookContext);
-  console.log(bookContext, "bookContext");
-
   const { storedBooks, setStoredBooks } = useContext(BookContext);
+
   const handleMarkAsRead = (currentBook) => {
     // Step 1: store book id
     // Step 2: where to store
@@ -44,11 +43,42 @@ const BookDetails = () => {
     );
 
     if (isExistBook) {
-      alert("The book already exists.");
+      toast.error("The book already exists.");
     } else {
       const updatedBooks = [...storedBooks, currentBook];
       setStoredBooks(updatedBooks);
-      alert(`${currentBook.bookName} is added to list`);
+      toast.success(`${currentBook.bookName} is added to list`);
+    }
+  };
+
+  const [wishList, setWishList] = useState([]);
+
+  const handleWishList = (currentBook) => {
+    // Step 1: store book id
+    // Step 2: where to store
+    // Step 3: array or collection
+    // Step 4: If the book is already exist, show an alert or toast
+    // Step 5: If not then add the book in the array or collection
+
+    const isExistBook = wishList.find(
+      (book) => book.bookId === currentBook.bookId,
+    );
+
+    const isExistInReadList = storedBooks.find(
+      (book) => book.bookId === currentBook.bookId,
+    );
+
+    if (isExistInReadList) {
+      toast.error("This book is already in read list");
+      return;
+    }
+
+    if (isExistBook) {
+      toast.error("The book already exists.");
+    } else {
+      const updatedWishList = [...wishList, currentBook];
+      setWishList(updatedWishList);
+      toast.success(`${currentBook.bookName} is added to list`);
     }
   };
 
@@ -85,7 +115,12 @@ const BookDetails = () => {
             >
               Mark as Read
             </button>
-            <button className="btn btn-primary">Add to Whishlist</button>
+            <button
+              className="btn btn-primary"
+              onClick={() => handleWishList(expectedBook)}
+            >
+              Add to Wishlist
+            </button>
           </div>
         </div>
       </div>

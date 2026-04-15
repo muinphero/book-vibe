@@ -12,8 +12,10 @@ const BookCard = ({ book }) => {
       </figure>
       <div className="card-body">
         <div className="flex items-center gap-2">
-          {(book.tags || []).map((tag) => (
-            <div className="badge bg-green-100 text-green-500">{tag}</div>
+          {(book.tags || []).map((tag, id) => (
+            <div key={id} className="badge bg-green-100 text-green-500">
+              {tag}
+            </div>
           ))}
         </div>
         <h2 className="card-title font-bold text-2xl">{book.bookName}</h2>
